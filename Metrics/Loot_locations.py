@@ -167,23 +167,15 @@ def get_loot_points(df, map_choice, map_config, fight_type="All Fights"):
     combat_events = None
     if fight_type == "All Kills":
         combat_events = {"Kill", "BotKill"}
-    elif fight_type == "Human Kills":
+    elif fight_type == "Human vs Human Kills":
         combat_events = {"Kill"}
-    elif fight_type == "Bot Kills":
+    elif fight_type == "Human vs Bot Kills":
         combat_events = {"BotKill"}
-    elif fight_type == "Human Fights":
-        # Older UI label: treat as human-caused kills only
-        combat_events = {"Kill"}
-    elif fight_type == "Bot Fights":
-        # Older UI label: treat as bot-caused kills only
-        combat_events = {"BotKill"}
-    elif fight_type == "All Fights":
+    elif fight_type == "All Combat Events":
         combat_events = {"Kill", "BotKill", "Killed", "KilledByBot", "BotKilled"}
-    elif fight_type == "All Deaths":
-        combat_events = {"Killed", "KilledByBot", "BotKilled"}
-    elif fight_type == "Player Deaths":
+    elif fight_type == "Human Deaths":
         combat_events = {"Killed"}
-    elif fight_type == "Bot-caused Deaths":
+    elif fight_type == "Deaths by Bot":
         combat_events = {"KilledByBot", "BotKilled"}
     else:
         combat_events = {"Kill", "BotKill", "Killed", "KilledByBot", "BotKilled"}

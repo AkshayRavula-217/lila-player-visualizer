@@ -68,7 +68,7 @@ def _get_endgame_points(df, player_type="all"):
 
 def get_endgame_heatmap(df, map_choice, map_config, player_type="all"):
     """
-    Heatmap of final kill locations per match.
+    End Game Positions heatmap — final kill locations per match.
     Uses the single last kill per match as endgame proxy.
     """
     if df is None or df.empty:

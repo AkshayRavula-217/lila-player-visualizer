@@ -29,20 +29,20 @@ def get_fight_heatmap(df, map_choice, map_config, fight_type="All Kills"):
         # Only kill events (human + bot)
         combat_df = df[df["event"].isin(["Kill", "BotKill"])]
 
-    elif fight_type == "Human Kills":
+    elif fight_type == "Human vs Human Kills":
         combat_df = df[df["event"] == "Kill"]
 
-    elif fight_type == "Bot Kills":
+    elif fight_type == "Human vs Bot Kills":
         combat_df = df[df["event"] == "BotKill"]
 
-    elif fight_type == "All Fights":
+    elif fight_type == "All Combat Events":
         # Both kill and death locations
         combat_df = df[df["event"].isin(["Kill", "BotKill", "Killed", "KilledByBot"])]
 
-    elif fight_type == "Player Deaths":
+    elif fight_type == "Human Deaths":
         combat_df = df[df["event"] == "Killed"]
 
-    elif fight_type == "Bot-caused Deaths":
+    elif fight_type == "Deaths by Bot":
         combat_df = df[df["event"] == "KilledByBot"]
 
     else:
@@ -100,15 +100,15 @@ def get_fight_points(df, map_choice, map_config, fight_type="All Kills"):
 
     if fight_type == "All Kills":
         combat_df = df[df["event"].isin(["Kill", "BotKill"])]
-    elif fight_type == "Human Kills":
+    elif fight_type == "Human vs Human Kills":
         combat_df = df[df["event"] == "Kill"]
-    elif fight_type == "Bot Kills":
+    elif fight_type == "Human vs Bot Kills":
         combat_df = df[df["event"] == "BotKill"]
-    elif fight_type == "All Fights":
+    elif fight_type == "All Combat Events":
         combat_df = df[df["event"].isin(["Kill", "BotKill", "Killed", "KilledByBot"])]
-    elif fight_type == "Player Deaths":
+    elif fight_type == "Human Deaths":
         combat_df = df[df["event"] == "Killed"]
-    elif fight_type == "Bot-caused Deaths":
+    elif fight_type == "Deaths by Bot":
         combat_df = df[df["event"] == "KilledByBot"]
     else:
         combat_df = df[df["event"].isin(["Kill", "BotKill"])]
@@ -142,21 +142,21 @@ def get_kill_heatmap(df, MAP_CONFIG, map_choice, fight_type, IMG_WIDTH=None, IMG
     """
     # Map older UI labels to the current fight_type categories.
     ft = (fight_type or "").strip()
-    if ft == "All Fights":
-        ft_mapped = "All Fights"
+    if ft == "All Combat Events":
+        ft_mapped = "All Combat Events"
     elif ft == "Human Fights":
-        ft_mapped = "Human Kills"
+        ft_mapped = "Human vs Human Kills"
     elif ft == "Bot Fights":
-        ft_mapped = "Bot Kills"
+        ft_mapped = "Human vs Bot Kills"
     elif ft == "All Deaths":
-        ft_mapped = "All Fights"  # closest; events are filtered inside get_fight_heatmap
-    elif ft == "Player Deaths":
-        ft_mapped = "Player Deaths"
-    elif ft == "Bot-caused Deaths":
-        ft_mapped = "Bot-caused Deaths"
+        ft_mapped = "All Combat Events"  # closest; events are filtered inside get_fight_heatmap
+    elif ft == "Human Deaths":
+        ft_mapped = "Human Deaths"
+    elif ft == "Deaths by Bot":
+        ft_mapped = "Deaths by Bot"
     elif ft == "All Kills":
         ft_mapped = "All Kills"
     else:
-        ft_mapped = "All Fights"
+        ft_mapped = "All Combat Events"
 
     return get_fight_heatmap(df, map_choice, MAP_CONFIG, fight_type=ft_mapped)

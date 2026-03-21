@@ -22,7 +22,7 @@ def _is_human(uid):
 
 def get_player_journey(df, map_choice, map_config, user_id_filter=None):
     """
-    Returns event dataframes for Player Journey scatter view.
+    Returns event dataframes for Player Rotation scatter view.
 
     user_id_filter is MANDATORY — filters to one specific player.
     match_id is OPTIONAL — already applied upstream in _apply_filters
@@ -33,7 +33,7 @@ def get_player_journey(df, map_choice, map_config, user_id_filter=None):
     - With match_id:    drill into one specific match for this player
 
     NOTE: Timestamps are batch-flushed at match end in this dataset.
-    This view shows WHERE the player went, not a time-ordered path.
+    Player Rotation shows WHERE the player went, not a time-ordered path.
 
     Returns dict with keys:
       human_pos   — Position events (this player, always human if UUID)

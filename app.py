@@ -23,12 +23,12 @@ with st.sidebar:
     metric = st.selectbox(
         "📊 Metric",
         [
-            "Fight Heatmap",
-            "Player Journey",
-            "Storm Deaths (Scatter)",
-            "Initial Match Starting Position Heatmap",
-            "Loot Heatmap",
-            "Endgame Positions Heatmap",
+            "Combat Zone",
+            "Player Rotation",
+            "Storm Deaths",
+            "Starting Position",
+            "Loot",
+            "End Game Positions",
         ],
     )
 
@@ -49,26 +49,32 @@ with st.sidebar:
     match_id = st.text_input("🔍 Match ID (optional)")
 
     # User ID — mandatory for Player Journey, ignored for other metrics
-    user_id_filter = st.text_input("👤 User ID (required for Player Journey)")
+    user_id_filter = st.text_input("👤 User ID (required for Player Rotation)")
 
-    fight_type = st.selectbox(
-        "⚔️ View Type",
-        [
-            "All Kills",
-            "Human Kills",
-            "Bot Kills",
-            "All Fights",
-            "Player Deaths",
-            "Bot-caused Deaths",
-        ],
-    )
+    if metric != "Combat Zone":
+        fight_type = None
+    else:
+        fight_type = st.selectbox(
+            "⚔️ Combat Type",
+            [
+                "All Kills",
+                "Human vs Human Kills",
+                "Human vs Bot Kills",
+                "All Combat Events",
+                "Human Deaths",
+                "Deaths by Bot",
+            ],
+        )
 
     # Human user_ids = UUID format (0019c582-...)
     # Bot user_ids   = numeric only (1388, 1411, ...)
-    player_type = st.selectbox(
-        "👤 Player Type",
-        ["All Players", "Humans Only", "Bots Only"],
-    )
+    if metric == "Combat Zone":
+        player_type = "All Players"
+    else:
+        player_type = st.selectbox(
+            "👤 Player Type",
+            ["All Players", "Humans Only", "Bots Only"],
+        )
 
     apply = st.button("Apply", use_container_width=True)
 
@@ -85,7 +91,7 @@ def _apply_filters(df):
 
     # Player type filter — UUID = human, numeric = bot
     # Note: not applied to Player Journey (handled inside that block)
-    if metric != "Player Journey":
+    if metric != "Player Rotation":
         if player_type == "Humans Only":
             df = df[df["user_id"].astype(str).str.match(
                 r"^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
@@ -174,10 +180,10 @@ if apply:
     # this view shows WHERE players were, not a time-ordered path.
     # Enter a Match ID for a meaningful single-match view.
     # -----------------------------
-    if metric == "Player Journey":
+    if metric == "Player Rotation":
 
         if not user_id_filter:
-            st.warning("⚠️ User ID is required for Player Journey. Enter a User ID in the sidebar.")
+            st.warning("⚠️ User ID is required for Player Rotation. Enter a User ID in the sidebar.")
             st.stop()
 
         # Show matches for this specific user as a helper expander
@@ -264,7 +270,7 @@ if apply:
     # FIGHT HEATMAP
     # Auto-switches to scatter when a match ID is entered
     # -----------------------------
-    elif metric == "Fight Heatmap":
+    elif metric == "Combat Zone":
 
         if match_id:
             # Single match — scatter points are more meaningful than heatmap
@@ -295,7 +301,7 @@ if apply:
     # LOOT HEATMAP
     # Auto-switches to scatter when a match ID is entered
     # -----------------------------
-    elif metric == "Loot Heatmap":
+    elif metric == "Loot":
 
         if match_id:
             from Metrics.Loot_locations import get_loot_points
@@ -325,7 +331,7 @@ if apply:
     # LANDING HEATMAP
     # Auto-switches to scatter when a match ID is entered
     # -----------------------------
-    elif metric == "Initial Match Starting Position Heatmap":
+    elif metric == "Starting Position":
 
         if match_id:
             # Show first loot per player as scatter for single match
@@ -363,7 +369,7 @@ if apply:
     # -----------------------------
     # ENDGAME POSITIONS HEATMAP
     # -----------------------------
-    elif metric == "Endgame Positions Heatmap":
+    elif metric == "End Game Positions":
 
         endgame_player = "bot" if player_type == "Bots Only" else \
                          "human" if player_type == "Humans Only" else "all"
@@ -385,7 +391,7 @@ if apply:
     # -----------------------------
     # STORM DEATHS SCATTER
     # -----------------------------
-    elif metric == "Storm Deaths (Scatter)":
+    elif metric == "Storm Deaths":
 
         pts = get_storm_deaths_points(df, map_choice, MAP_CONFIG)
         if pts:
