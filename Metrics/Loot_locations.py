@@ -165,20 +165,16 @@ def get_loot_points(df, map_choice, map_config, fight_type="All Fights"):
         return None
 
     combat_events = None
-    if fight_type == "All Kills":
-        combat_events = {"Kill", "BotKill"}
-    elif fight_type == "Human vs Human Kills":
-        combat_events = {"Kill"}
-    elif fight_type == "Human vs Bot Kills":
-        combat_events = {"BotKill"}
-    elif fight_type == "All Combat Events":
-        combat_events = {"Kill", "BotKill", "Killed", "KilledByBot", "BotKilled"}
-    elif fight_type == "Human Deaths":
-        combat_events = {"Killed"}
-    elif fight_type == "Deaths by Bot":
-        combat_events = {"KilledByBot", "BotKilled"}
+    if fight_type == "All Combat":
+        combat_events = {"Kill", "Killed", "BotKill", "KilledByBot", "BotKilled"}
+    elif fight_type == "Human vs Human":
+        combat_events = {"Kill", "Killed"}
+    elif fight_type == "Human vs Bot":
+        combat_events = {"BotKill", "KilledByBot"}
+    elif fight_type == "Bot vs Bot":
+        combat_events = {"BotVsBot"}  # no BvB events in current data
     else:
-        combat_events = {"Kill", "BotKill", "Killed", "KilledByBot", "BotKilled"}
+        combat_events = {"Kill", "Killed", "BotKill", "KilledByBot", "BotKilled"}
 
     # If we don't have match_id, we can't do death-drop time filtering.
     if "match_id" not in df.columns:
