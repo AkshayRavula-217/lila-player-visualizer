@@ -57,12 +57,10 @@ with st.sidebar:
         fight_type = st.selectbox(
             "⚔️ Combat Type",
             [
-                "All Kills",
-                "Human vs Human Kills",
-                "Human vs Bot Kills",
-                "All Combat Events",
-                "Human Deaths",
-                "Deaths by Bot",
+                "All Combat",
+                "Human vs Human",
+                "Human vs Bot",
+                "Bot vs Bot",
             ],
         )
 

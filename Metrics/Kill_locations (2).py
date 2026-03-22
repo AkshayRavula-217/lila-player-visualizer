@@ -23,30 +23,22 @@ def get_fight_heatmap(df, map_choice, map_config, fight_type="All Kills"):
     # -----------------------------
     # UPDATED LOGIC (ONLY CHANGE)
     # -----------------------------
-    fight_type = (fight_type or "All Kills").strip()
+    fight_type = (fight_type or "All Combat").strip()
 
-    if fight_type == "All Kills":
-        # Only kill events (human + bot)
-        combat_df = df[df["event"].isin(["Kill", "BotKill"])]
+    if fight_type == "All Combat":
+        combat_df = df[df["event"].isin(["Kill", "Killed", "BotKill", "KilledByBot", "BotKilled"])]
 
-    elif fight_type == "Human vs Human Kills":
-        combat_df = df[df["event"] == "Kill"]
+    elif fight_type == "Human vs Human":
+        combat_df = df[df["event"].isin(["Kill", "Killed"])]
 
-    elif fight_type == "Human vs Bot Kills":
-        combat_df = df[df["event"] == "BotKill"]
+    elif fight_type == "Human vs Bot":
+        combat_df = df[df["event"].isin(["BotKill", "KilledByBot"])]
 
-    elif fight_type == "All Combat Events":
-        # Both kill and death locations
-        combat_df = df[df["event"].isin(["Kill", "BotKill", "Killed", "KilledByBot"])]
-
-    elif fight_type == "Human Deaths":
-        combat_df = df[df["event"] == "Killed"]
-
-    elif fight_type == "Deaths by Bot":
-        combat_df = df[df["event"] == "KilledByBot"]
+    elif fight_type == "Bot vs Bot":
+        combat_df = df[df["event"] == "BotVsBot"]  # no BvB events in current data
 
     else:
-        combat_df = df[df["event"].isin(["Kill", "BotKill"])]
+        combat_df = df[df["event"].isin(["Kill", "Killed", "BotKill", "KilledByBot", "BotKilled"])]
 
     # -----------------------------
     if combat_df.empty:
@@ -96,22 +88,18 @@ def get_fight_points(df, map_choice, map_config, fight_type="All Kills"):
 
     df = _decode_events(df)
 
-    fight_type = (fight_type or "All Kills").strip()
+    fight_type = (fight_type or "All Combat").strip()
 
-    if fight_type == "All Kills":
-        combat_df = df[df["event"].isin(["Kill", "BotKill"])]
-    elif fight_type == "Human vs Human Kills":
-        combat_df = df[df["event"] == "Kill"]
-    elif fight_type == "Human vs Bot Kills":
-        combat_df = df[df["event"] == "BotKill"]
-    elif fight_type == "All Combat Events":
-        combat_df = df[df["event"].isin(["Kill", "BotKill", "Killed", "KilledByBot"])]
-    elif fight_type == "Human Deaths":
-        combat_df = df[df["event"] == "Killed"]
-    elif fight_type == "Deaths by Bot":
-        combat_df = df[df["event"] == "KilledByBot"]
+    if fight_type == "All Combat":
+        combat_df = df[df["event"].isin(["Kill", "Killed", "BotKill", "KilledByBot", "BotKilled"])]
+    elif fight_type == "Human vs Human":
+        combat_df = df[df["event"].isin(["Kill", "Killed"])]
+    elif fight_type == "Human vs Bot":
+        combat_df = df[df["event"].isin(["BotKill", "KilledByBot"])]
+    elif fight_type == "Bot vs Bot":
+        combat_df = df[df["event"] == "BotVsBot"]  # no BvB events in current data
     else:
-        combat_df = df[df["event"].isin(["Kill", "BotKill"])]
+        combat_df = df[df["event"].isin(["Kill", "Killed", "BotKill", "KilledByBot", "BotKilled"])]
 
     if combat_df.empty:
         return None
